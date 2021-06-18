@@ -2,7 +2,7 @@ const  validations = require('../validation/validations');
 const Person = require('../model/Person');
 const uuid = require('uuid');
 const _ = require('lodash');
-
+const logger = require('../utils/logger');
 
 
 module.exports.getPerson = async (req, res) => {
@@ -21,8 +21,7 @@ module.exports.getPerson = async (req, res) => {
                                       __v: 0,
                                      });
         res.status(200).json(person);
-      } catch (err) {
-        console.log(err);
+      } catch (err) {  
         res.status(500).json({
           error: true,
           msg: "server error",
@@ -55,7 +54,6 @@ module.exports.getPeople = async (req, res) => {
  
     res.status(200).json(people);
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       error: true,
       msg: "server error",
@@ -66,18 +64,20 @@ module.exports.getPeople = async (req, res) => {
 
 
 module.exports.createPerson = async (req, res) => {
+        
        const personInput = {
         uuid: uuid.v4(),
         passengerClass: req.body.passengerClass,
         name: req.body.name,
-        sex: req.body.sex.toLowerCase() === ('male' || 'female') ? req.body.sex : undefined,
+        sex: req.body.sex === 'male' || 'female' ? req.body.sex : undefined,
         age: parseInt(req.body.age),
         siblingsOrSpousesAboard: parseInt(req.body.siblingsOrSpousesAboard),
         parentsOrChildrenAboard: parseInt(req.body.parentsOrChildrenAboard),
         fare: parseFloat(req.body.fare),
         survived: req.body.survived == 'true' ? true : false
        }
-
+       console.log((req.body.sex === ('male' || 'female') ? req.body.sex : undefined), 'test');
+       console.log(req.body);
        const isPersonValid = await validations.validatePersonInput(personInput);
          console.log(isPersonValid);
        if (isPersonValid.errorStatus) {
@@ -94,7 +94,6 @@ module.exports.createPerson = async (req, res) => {
         res.status(201).json(personResponse);
 
         } catch (err) {
-          console.error(err);
           res.status(500).json({
             error: true,
             msg: "server error",
@@ -152,7 +151,7 @@ module.exports.updatePerson = async (req, res) => {
     res.status(201).json();
 
     } catch (err) {
-      console.error(err);
+     
       res.status(500).json({
         error: true,
         msg: "server error",
@@ -186,7 +185,6 @@ module.exports.deletePerson = async (req, res) => {
       }
     }
   } catch (e) {
-    console.log(e);
     res.status(500).json({
       message: "server error",
     });
