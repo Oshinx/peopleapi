@@ -2,7 +2,7 @@ const  validations = require('../validation/validations');
 const Person = require('../model/Person');
 const uuid = require('uuid');
 const _ = require('lodash');
-const logger = require('./logger/index');
+const logger = require('../logger/index');
 
 
 module.exports.getPerson = async (req, res) => {
@@ -92,7 +92,7 @@ module.exports.createPerson = async (req, res) => {
         try {
         const newPerson =  new Person(personInput);
         const dbResponse = await newPerson.save();
-        const personResponse = _.pick(dbResponse,["_id","uuid","passengerClass","name","sex","age","siblingsOrSpousesAboard","parentsOrChildrenAboard","fare", "survived"]);
+        const personResponse = _.pick(dbResponse,["uuid","passengerClass","name","sex","age","siblingsOrSpousesAboard","parentsOrChildrenAboard","fare", "survived"]);
         res.status(201).json(personResponse);
 
         } catch (err) {
@@ -151,7 +151,7 @@ module.exports.updatePerson = async (req, res) => {
       }
     );
    
-    res.status(201).json();
+    res.status(204).json();
 
     } catch (err) {
       logger.error(`500 || ${err} || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
