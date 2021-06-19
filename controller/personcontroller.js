@@ -2,7 +2,7 @@ const  validations = require('../validation/validations');
 const Person = require('../model/Person');
 const uuid = require('uuid');
 const _ = require('lodash');
-const logger = require('../utils/logger');
+const logger = require('./logger/index');
 
 
 module.exports.getPerson = async (req, res) => {
@@ -22,6 +22,7 @@ module.exports.getPerson = async (req, res) => {
                                      });
         res.status(200).json(person);
       } catch (err) {  
+        logger.error(`500 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
         res.status(500).json({
           error: true,
           msg: "server error",
@@ -54,6 +55,7 @@ module.exports.getPeople = async (req, res) => {
  
     res.status(200).json(people);
   } catch (err) {
+    logger.error(`500 || ${err} || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`); 
     res.status(500).json({
       error: true,
       msg: "server error",
@@ -94,6 +96,7 @@ module.exports.createPerson = async (req, res) => {
         res.status(201).json(personResponse);
 
         } catch (err) {
+          logger.error(`500 || ${err} || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
           res.status(500).json({
             error: true,
             msg: "server error",
@@ -151,7 +154,7 @@ module.exports.updatePerson = async (req, res) => {
     res.status(201).json();
 
     } catch (err) {
-     
+      logger.error(`500 || ${err} || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
       res.status(500).json({
         error: true,
         msg: "server error",
@@ -184,7 +187,8 @@ module.exports.deletePerson = async (req, res) => {
         });
       }
     }
-  } catch (e) {
+  } catch (err) {
+    logger.error(`500 || ${err} || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`)
     res.status(500).json({
       message: "server error",
     });
